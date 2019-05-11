@@ -7,6 +7,12 @@
             <name>active_cart_save</name>
             <label lang="de">Aktiv?</label>
         </element>
+
+        <element type="boolean">
+            <name>use_voucher</name>
+            <label lang="de">Beachte Gutscheine?</label>
+        </element>
+
     </elements>
 
 </config>
