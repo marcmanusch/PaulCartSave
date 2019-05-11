@@ -26,6 +26,7 @@ class Shopware_Controllers_Frontend_PaulCartSave extends Enlight_Controller_Acti
 
         # get articles from "save Button"
         $cartSaveProducts = $this->Request()->getParam('cartSaveProducts');
+        $cartSaveProductsQty = $this->Request()->getParam('cartSaveProductsQty');
 
         $hash = bin2hex(random_bytes(16));
         $now = date('Y-m-d H:i:s');
@@ -38,12 +39,14 @@ class Shopware_Controllers_Frontend_PaulCartSave extends Enlight_Controller_Acti
                 array(
                     'hash' => '?',
                     'articles'   => '?',
-                    'date'    => '?'
+                    'date'    => '?',
+                    'quantity' => '?'
                 )
             )
             ->setParameter(0, $hash)
             ->setParameter(1, JSON_encode($cartSaveProducts))
-            ->setParameter(2, $now);
+            ->setParameter(2, $now)
+            ->setParameter(3, JSON_encode($cartSaveProductsQty));
         $builder->execute();
 
         // Add hash to session
@@ -67,29 +70,51 @@ class Shopware_Controllers_Frontend_PaulCartSave extends Enlight_Controller_Acti
         # no template
         Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
 
+        // Get Config
+
+        $config = $this->container->get('shopware.plugin.config_reader')->getByPluginName('PaulCartSave');
+        $use_voucher = $config['use_voucher'];
+
         $hash = $this->Request()->getParam('hash');
         $saveCartArray = $this->getArticles($hash);
+        $saveCartArray = $saveCartArray[0];
 
-        $articles = JSON_decode($saveCartArray[0]['articles']);
-
+        $articleArray = JSON_decode($saveCartArray['articles']);
+        $qtyArray = JSON_decode($saveCartArray['quantity']);
 
         // clear session
         $session = $this->container->get('session');
         $session->paulSaveCartHash = NULL;
 
+        //Lösche Warenkorb
+        Shopware()->Modules()->Basket()->clearBasket();
+
         //Füge jeden Artikel dem Warenkorb hinzu
-        foreach ($articles as $article) {
+        foreach ($articleArray as $key => $article) {
+
             try {
+
                 // Hole den Warenkorb
-                $basketId = Shopware()->Modules()->Basket()->sAddArticle($article, 1);
+                $basketId = Shopware()->Modules()->Basket()->sAddArticle($article, $qtyArray[$key]);
+
+                if($use_voucher) {
+                    // versuche Gutschein zu speichern
+                    $basketId = Shopware()->Modules()->Basket()->sAddVoucher($article);
+                }
+
+
                 /* @var $attributeDataLoader AttributeDataLoader */
                 $attributeDataLoader = $this->get( "shopware_attribute.data_loader" );
+
                 /* @var $attributeDataPersister AttributeDataPersister */
                 $attributeDataPersister = $this->get( "shopware_attribute.data_persister" );
+
                 // Speichere die Artikel in den Warenkorb
                 $attributes = $attributeDataLoader->load( "s_order_basket_attributes", $basketId );
                 $attributeDataPersister->persist( $attributes, "s_order_basket_attributes", $basketId );
+
             } catch (Exception $e) {}
+
         }
 
         // Zum Warenkorb weiterleiten, nachdem alle Artikel im Warenkorb sind

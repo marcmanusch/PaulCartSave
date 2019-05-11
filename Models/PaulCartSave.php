@@ -37,6 +37,12 @@ class PaulCartSave extends ModelEntity
     private $articles;
 
     /**
+     * @var string $quantity
+     * @ORM\Column(name="quantity", type="text", nullable=false)
+     */
+    private $quantity;
+
+    /**
      * @var mixed $date;
      *
      * @ORM\Column(name="date", type="date", nullable=false)
@@ -107,7 +113,20 @@ class PaulCartSave extends ModelEntity
         $this->date = $date;
     }
 
+    /**
+     * @return string
+     */
+    public function getQuantity(): string
+    {
+        return $this->quantity;
+    }
 
-
+    /**
+     * @param string $quantity
+     */
+    public function setQuantity(string $quantity)
+    {
+        $this->quantity = $quantity;
+    }
 
 }
