@@ -10,11 +10,41 @@ form.save-cart.form {
   padding-bottom: 10px;
 }
 
+.save-cart-link {
+  display: none;
+}
+
+span.hide--on--mobile {
+  display: none;
+}
+
 @media screen and(min-width: @tabletViewportWidth) {
+
+  a.whatsapp.hide--on--desktop {
+    display: none;
+  }
+
+  span.hide--on--mobile {
+    display: inline-block;
+  }
+
+  .save-cart-link {
+    display: inline-block;
+  }
+
   .product--table .table--actions {
     text-align: unset;
   }
   form.save-cart.form {
     padding-bottom: unset;
   }
+}
+
+/* icons */
+div#share {
+  font-size: 16px;
+}
+
+a.email {
+  padding-right: 35px;
 }

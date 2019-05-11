@@ -2,13 +2,17 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
     <label lang="de">Warenkorb speichern und senden</label>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <copyright>Marc Manusch</copyright>
     <license>proprietary</license>
     <link>http://github.com/marcmanusch</link>
     <author>Marc Manusch</author>
 
     <compatibility minVersion="5.2.0" />
+
+    <changelog version="1.0.2">
+        <changes lang="de">ADD: Share buttons</changes>
+    </changelog>
 
     <changelog version="1.0.1">
         <changes lang="de">FIX: add correct count of items</changes>
