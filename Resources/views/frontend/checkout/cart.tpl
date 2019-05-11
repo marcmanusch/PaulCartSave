@@ -8,13 +8,32 @@
                 <!-- Alert message icon -->
                 <i class="icon--element icon--disk"></i>
             </div>
-            <div class="alert--content">
+
+            <div class="alert--content save-cart">
                 {s name="CheckoutActionsLinkSaveCartMessage" namespace="frontend/checkout/actions"}Ihr Warenkorb wurde erfolgreich gespeichert:{/s}
-                <a href="./PaulCartSave/loadArticles?hash={$smarty.session.Shopware.paulSaveCartHash}">{$Shop->getHost()}{$Shop->getbasePath()}/PaulCartSave/loadArticles?hash={$smarty.session.Shopware.paulSaveCartHash}</a>
+
+                <!-- Copy -->
+                <span class="hide--on--mobile">
+                    <input class="btn" type="text" value="{$Shop->getHost()}{$Shop->getbasePath()}/PaulCartSave/loadArticles?hash={$smarty.session.Shopware.paulSaveCartHash}" id="saveCartLink">
+                    <button  onclick="clipBoard()">{s name="CheckoutActionsLinkSaveCartClip" namespace="frontend/checkout/actions"}Link kopieren{/s}</button>
+                </span>
+
+                <div id="share">
+
+                    <a class="email" href="mailto:?subject=PaulGurkes Warenkorb&amp;body={$Shop->getHost()}{$Shop->getbasePath()}/PaulCartSave/loadArticles?hash={$smarty.session.Shopware.paulSaveCartHash}" target="_self" target="blank">
+                        <i class="icon--mail" aria-hidden="true"></i>
+                        E-mail
+                    </a>
+
+                    <a class="whatsapp hide--on--desktop" href="whatsapp://send?text=Hey! Hier findest du meinen Warenkorb bei PaulGurkes: {$Shop->getHost()}{$Shop->getbasePath()}/PaulCartSave/loadArticles?hash={$smarty.session.Shopware.paulSaveCartHash}" target="_blank"" target="blank">
+                    <i class="icon--share" aria-hidden="true"></i>
+                        Whatsapp
+                    </a>
+
+                </div>
+
             </div>
         </div>
-
-
     {/if}
 
 
